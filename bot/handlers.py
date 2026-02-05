@@ -55,6 +55,24 @@ async def add_input(update: Update, context: ContextTypes.DEFAULT_TYPE):
     tracking_code = parts[0]
     order_name = parts[1]
     
+    # Validate tracking code format
+    if not re.match(r'^(SPXVN\d+|LEX\d+)$', tracking_code):
+        # Increment retry count
+        retry_count = context.user_data.get('retry_count', 0) + 1
+        context.user_data['retry_count'] = retry_count
+        
+        if retry_count >= 2:
+            await update.message.reply_text("Too many invalid attempts. Operation cancelled.")
+            return ConversationHandler.END
+            
+        await update.message.reply_text(
+            f"Invalid tracking code format (Attempt {retry_count}/2).\n"
+            "Must start with 'SPXVN' or 'LEX' followed by numbers.\n"
+            "Example: `SPXVN068640125432`",
+            parse_mode='Markdown'
+        )
+        return WAITING_FOR_INPUT
+
     with get_session() as session:
         new_order = TrackingOrder(
             user_id=user_id, 
