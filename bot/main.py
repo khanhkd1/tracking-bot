@@ -4,7 +4,7 @@ from telegram.ext import ApplicationBuilder, CommandHandler
 from bot.handlers import start, add_handler, show_handler
 from dotenv import load_dotenv
 
-# Setup logging
+# Cấu hình logging
 logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO
 )

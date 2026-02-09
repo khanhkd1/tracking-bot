@@ -10,7 +10,7 @@ from alembic import op
 import sqlalchemy as sa
 
 
-# revision identifiers, used by Alembic.
+# định danh bản sửa đổi, được sử dụng bởi Alembic.
 revision = "001_initial"
 down_revision = None
 branch_labels = None

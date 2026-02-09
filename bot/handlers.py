@@ -10,7 +10,7 @@ from bot.db import get_session
 from bot.models import TrackingOrder
 import re
 
-# Define states for ConversationHandler
+# Định nghĩa các trạng thái cho ConversationHandler
 WAITING_FOR_INPUT = 1
 
 
@@ -23,7 +23,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 
 async def add_start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    # Initialize retry count
+    # Khởi tạo bộ đếm thử lại
     context.user_data["retry_count"] = 0
     await update.message.reply_text(
         "Please send the tracking information in the format:\n"
@@ -40,13 +40,13 @@ async def add_input(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.effective_user.id
     text = update.message.text.strip()
 
-    # Parse input: tracking_code order_name
-    # Assuming order_name matches until end of string? Or just split by first space?
-    # User said: "tracking_code order_name". Example "SPXVN... a56"
+    # Phân tích đầu vào: tracking_code order_name
+    # Giả sử order_name khớp cho đến cuối chuỗi? Hay chỉ tách bằng khoảng trắng đầu tiên?
+    # Người dùng nói: "tracking_code order_name". Ví dụ "SPXVN... a56"
     parts = text.split(maxsplit=1)
 
     if len(parts) < 2:
-        # Increment retry count
+        # Tăng bộ đếm thử lại
         retry_count = context.user_data.get("retry_count", 0) + 1
         context.user_data["retry_count"] = retry_count
 
@@ -66,9 +66,9 @@ async def add_input(update: Update, context: ContextTypes.DEFAULT_TYPE):
     tracking_code = parts[0]
     order_name = parts[1]
 
-    # Validate tracking code format
+    # Xác thực định dạng mã vận đơn
     if not re.match(r"^(SPXVN\d+|LEX\d+)$", tracking_code):
-        # Increment retry count
+        # Tăng bộ đếm thử lại
         retry_count = context.user_data.get("retry_count", 0) + 1
         context.user_data["retry_count"] = retry_count
 
@@ -91,7 +91,7 @@ async def add_input(update: Update, context: ContextTypes.DEFAULT_TYPE):
             user_id=user_id, tracking_code=tracking_code, order_name=order_name
         )
         session.add(new_order)
-        session.commit()  # Added commit to save changes
+        session.commit()  # Thêm commit để lưu thay đổi
 
     await update.message.reply_text(
         f"Saved order: `{tracking_code}` ({order_name})", parse_mode="Markdown"
@@ -101,7 +101,7 @@ async def add_input(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def add_cancel(update: Update, context: ContextTypes.DEFAULT_TYPE):
     text = update.message.text
-    # Handle specific commands rewriting functionality
+    # Xử lý các lệnh cụ thể viết lại chức năng
     if text and text.strip().startswith("/"):
         command = text.strip().split()[0].split("@")[0].lower()
 
@@ -148,7 +148,7 @@ async def show_items(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(response, parse_mode="Markdown")
 
 
-# Handler Definitions
+# Định nghĩa Handler
 add_handler = ConversationHandler(
     entry_points=[CommandHandler("add", add_start)],
     states={
@@ -159,7 +159,7 @@ add_handler = ConversationHandler(
         CommandHandler("cancel", add_cancel),
         MessageHandler(filters.COMMAND, add_cancel),
     ],
-    conversation_timeout=60,  # 1 minute timeout
+    conversation_timeout=60,  # Hết giờ sau 1 phút
 )
 
 show_handler = CommandHandler("show", show_items)

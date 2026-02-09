@@ -11,7 +11,7 @@ db_password = os.getenv("POSTGRES_PASSWORD", "password")
 db_host = os.getenv("DB_HOST", "db")
 db_name = os.getenv("POSTGRES_DB", "tracking_bot_db")
 
-# Allow overriding via DATABASE_URL
+# Cho phép ghi đè qua DATABASE_URL
 DATABASE_URL = os.getenv(
     "DATABASE_URL", f"postgresql://{db_user}:{db_password}@{db_host}/{db_name}"
 )
@@ -22,7 +22,7 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 @contextmanager
 def get_session():
-    """Provide a transactional scope around a series of operations."""
+    """Cung cấp phạm vi giao dịch xung quanh một loạt các thao tác."""
     session = SessionLocal()
     try:
         yield session

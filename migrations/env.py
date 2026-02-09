@@ -6,50 +6,50 @@ import os
 from alembic import context
 from dotenv import load_dotenv
 
-# this is the Alembic Config object, which provides
-# access to the values within the .ini file in use.
+# đây là đối tượng Cấu hình Alembic, cung cấp
+# quyền truy cập vào các giá trị trong tệp .ini đang sử dụng.
 config = context.config
 
-# Interpret the config file for Python logging.
-# This line sets up loggers basically.
+# Giải thích tệp cấu hình cho Python logging.
+# Dòng này cơ bản thiết lập các logger.
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
-# Model metadata
+# Metadata cho Model
 from bot.models import Base
 
 target_metadata = Base.metadata
 
-# Load env variables
+# Tải các biến môi trường
 load_dotenv()
 db_user = os.getenv("POSTGRES_USER", "user")
 db_password = os.getenv("POSTGRES_PASSWORD", "password")
 db_host = os.getenv("DB_HOST", "db")
 db_name = os.getenv("POSTGRES_DB", "tracking_bot_db")
-# Construct database URL
-# NOTE: Inside docker, host is 'db'. Outside, might be 'localhost'.
-# When running alembic locally (outside docker), we might need localhost port mapping.
-# But usually we run alembic INSIDE the container or use localhost if mapped.
-# Let's default to the env var DATABASE_URL if present, otherwise construct it.
+# Xây dựng URL cơ sở dữ liệu
+# LƯU Ý: Bên trong docker, host là 'db'. Bên ngoài, có thể là 'localhost'.
+# Khi chạy alembic cục bộ (bên ngoài docker), chúng ta có thể cần ánh xạ cổng localhost.
+# Nhưng thường chúng ta chạy alembic BÊN TRONG container hoặc sử dụng localhost nếu được ánh xạ.
+# Hãy mặc định là biến môi trường DATABASE_URL nếu có, nếu không thì xây dựng nó.
 
 db_url = os.getenv("DATABASE_URL")
 if not db_url:
-    # If not set, try to build it
+    # Nếu chưa thiết lập, thử xây dựng nó
     db_url = f"postgresql://{db_user}:{db_password}@{db_host}/{db_name}"
 
 config.set_main_option("sqlalchemy.url", db_url)
 
 
 def run_migrations_offline() -> None:
-    """Run migrations in 'offline' mode.
+    """Chạy migrations ở chế độ 'offline'.
 
-    This configures the context with just a URL
-    and not an Engine, though an Engine is acceptable
-    here as well.  By skipping the Engine creation
-    we don't even need a DBAPI to be available.
+    Cấu hình context chỉ với URL
+    và không có Engine, mặc dù Engine cũng có thể chấp nhận được
+    ở đây. Bằng cách bỏ qua việc tạo Engine
+    chúng ta thậm chí không cần DBAPI có sẵn.
 
-    Calls to context.execute() here emit the given string to the
-    script output.
+    Các lệnh gọi đến context.execute() ở đây sẽ xuất chuỗi đã cho ra
+    output của script.
 
     """
     url = config.get_main_option("sqlalchemy.url")
@@ -65,10 +65,10 @@ def run_migrations_offline() -> None:
 
 
 def run_migrations_online() -> None:
-    """Run migrations in 'online' mode.
+    """Chạy migrations ở chế độ 'online'.
 
-    In this scenario we need to create an Engine
-    and associate a connection with the context.
+    Trong kịch bản này chúng ta cần tạo một Engine
+    và liên kết một kết nối với context.
 
     """
     connectable = engine_from_config(
