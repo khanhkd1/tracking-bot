@@ -6,14 +6,14 @@ from dotenv import load_dotenv
 
 # Setup logging
 logging.basicConfig(
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    level=logging.INFO
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO
 )
+
 
 def main():
     load_dotenv()
     token = os.getenv("TELEGRAM_TOKEN")
-    
+
     if not token or token == "your_telegram_bot_token_here":
         logging.error("TELEGRAM_TOKEN is not set properly in .env")
         return
@@ -27,5 +27,6 @@ def main():
     print("Bot is running...")
     application.run_polling()
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     main()

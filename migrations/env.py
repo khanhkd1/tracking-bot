@@ -17,16 +17,17 @@ if config.config_file_name is not None:
 
 # Model metadata
 from bot.models import Base
+
 target_metadata = Base.metadata
 
 # Load env variables
 load_dotenv()
 db_user = os.getenv("POSTGRES_USER", "user")
 db_password = os.getenv("POSTGRES_PASSWORD", "password")
-db_host = os.getenv("DB_HOST", "db") 
+db_host = os.getenv("DB_HOST", "db")
 db_name = os.getenv("POSTGRES_DB", "tracking_bot_db")
 # Construct database URL
-# NOTE: Inside docker, host is 'db'. Outside, might be 'localhost'. 
+# NOTE: Inside docker, host is 'db'. Outside, might be 'localhost'.
 # When running alembic locally (outside docker), we might need localhost port mapping.
 # But usually we run alembic INSIDE the container or use localhost if mapped.
 # Let's default to the env var DATABASE_URL if present, otherwise construct it.
@@ -77,9 +78,7 @@ def run_migrations_online() -> None:
     )
 
     with connectable.connect() as connection:
-        context.configure(
-            connection=connection, target_metadata=target_metadata
-        )
+        context.configure(connection=connection, target_metadata=target_metadata)
 
         with context.begin_transaction():
             context.run_migrations()

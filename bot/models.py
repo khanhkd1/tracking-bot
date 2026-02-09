@@ -4,8 +4,9 @@ from datetime import datetime
 
 Base = declarative_base()
 
+
 class TrackingOrder(Base):
-    __tablename__ = 'tracking_orders'
+    __tablename__ = "tracking_orders"
 
     id = Column(Integer, primary_key=True)
     user_id = Column(BigInteger, nullable=False, index=True)
@@ -13,7 +14,6 @@ class TrackingOrder(Base):
     order_name = Column(String(50), nullable=False)
     tracking_code = Column(String(50), nullable=False)
     last_order_code = Column(String(10), nullable=True)
-
 
     def __repr__(self):
         return f"<TrackingOrder(id={self.id}, user_id={self.user_id}, tracking_code={self.tracking_code}, last_spx_code={self.last_spx_code})>"

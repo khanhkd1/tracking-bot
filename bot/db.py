@@ -12,10 +12,13 @@ db_host = os.getenv("DB_HOST", "db")
 db_name = os.getenv("POSTGRES_DB", "tracking_bot_db")
 
 # Allow overriding via DATABASE_URL
-DATABASE_URL = os.getenv("DATABASE_URL", f"postgresql://{db_user}:{db_password}@{db_host}/{db_name}")
+DATABASE_URL = os.getenv(
+    "DATABASE_URL", f"postgresql://{db_user}:{db_password}@{db_host}/{db_name}"
+)
 
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
 
 @contextmanager
 def get_session():

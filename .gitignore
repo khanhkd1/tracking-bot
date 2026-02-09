@@ -3,3 +3,4 @@ __pycache__/
 .env
 pg_data/
 .DS_Store
+.venv
