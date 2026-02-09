@@ -2,6 +2,7 @@ import os
 import logging
 from telegram.ext import ApplicationBuilder, CommandHandler
 from bot.handlers import start, add_handler, show_handler
+from bot.tasks import send_tracking_updates
 from dotenv import load_dotenv
 
 # Cấu hình logging
@@ -24,7 +25,16 @@ def main():
     application.add_handler(add_handler)
     application.add_handler(show_handler)
 
-    print("Bot is running...")
+    # Đăng ký cronjob
+    if application.job_queue:
+        application.job_queue.run_repeating(
+            send_tracking_updates, interval=30, first=10
+        )
+        print("Đã đăng ký cronjob gửi cập nhật mỗi 5 phút.")
+    else:
+        print("Lỗi: JobQueue không khả dụng.")
+
+    print("Bot đang chạy...")
     application.run_polling()
 
 

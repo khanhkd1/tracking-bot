@@ -5,3 +5,4 @@ psycopg2-binary~=2.9
 python-dotenv~=1.0
 pre-commit
 black
+httpx~=0.26.0

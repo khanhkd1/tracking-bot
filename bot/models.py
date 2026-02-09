@@ -16,4 +16,4 @@ class TrackingOrder(Base):
     last_order_code = Column(String(10), nullable=True)
 
     def __repr__(self):
-        return f"<TrackingOrder(id={self.id}, user_id={self.user_id}, tracking_code={self.tracking_code}, last_spx_code={self.last_spx_code})>"
+        return f"<TrackingOrder(id={self.id}, user_id={self.user_id}, tracking_code={self.tracking_code})>"

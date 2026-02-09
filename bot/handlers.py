@@ -16,9 +16,9 @@ WAITING_FOR_INPUT = 1
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
-        "Hello! I can help you track orders.\n"
-        "Use /add to track a new order.\n"
-        "Use /show to see your tracked orders."
+        "Xin chào! Tôi có thể giúp bạn theo dõi đơn hàng.\n"
+        "Sử dụng /add để thêm đơn hàng mới.\n"
+        "Sử dụng /show để xem các đơn hàng đang theo dõi."
     )
 
 
@@ -26,9 +26,9 @@ async def add_start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     # Khởi tạo bộ đếm thử lại
     context.user_data["retry_count"] = 0
     await update.message.reply_text(
-        "Please send the tracking information in the format:\n"
-        "`Tracking_Code Order_Name`\n\n"
-        "Example:\n"
+        "Vui lòng gửi thông tin theo dõi theo định dạng:\n"
+        "`Mã_Vận_Đơn Tên_Đơn_Hàng`\n\n"
+        "Ví dụ:\n"
         "SPXVN068640125432 a56\n"
         "LEX068640125432 b78",
         parse_mode="Markdown",
@@ -52,13 +52,13 @@ async def add_input(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
         if retry_count >= 2:
             await update.message.reply_text(
-                "Too many invalid attempts. Operation cancelled."
+                "Quá nhiều lần thử không hợp lệ. Thao tác đã bị hủy."
             )
             return ConversationHandler.END
 
         await update.message.reply_text(
-            f"Invalid format (Attempt {retry_count}/2). Please use: `Tracking_Code Order_Name`\n"
-            "Example: `SPXVN12345678 myorder`",
+            f"Định dạng không hợp lệ (Lần thử {retry_count}/2). Vui lòng sử dụng: `Mã_Vận_Đơn Tên_Đơn_Hàng`\n"
+            "Ví dụ: `SPXVN12345678 donhangcuatoi`",
             parse_mode="Markdown",
         )
         return WAITING_FOR_INPUT
@@ -74,14 +74,14 @@ async def add_input(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
         if retry_count >= 2:
             await update.message.reply_text(
-                "Too many invalid attempts. Operation cancelled."
+                "Quá nhiều lần thử không hợp lệ. Thao tác đã bị hủy."
             )
             return ConversationHandler.END
 
         await update.message.reply_text(
-            f"Invalid tracking code format (Attempt {retry_count}/2).\n"
-            "Must start with 'SPXVN' or 'LEX' followed by numbers.\n"
-            "Example: `SPXVN068640125432`",
+            f"Định dạng mã vận đơn không hợp lệ (Lần thử {retry_count}/2).\n"
+            "Phải bắt đầu bằng 'SPXVN' hoặc 'LEX' theo sau là các chữ số.\n"
+            "Ví dụ: `SPXVN068640125432`",
             parse_mode="Markdown",
         )
         return WAITING_FOR_INPUT
@@ -94,7 +94,7 @@ async def add_input(update: Update, context: ContextTypes.DEFAULT_TYPE):
         session.commit()  # Thêm commit để lưu thay đổi
 
     await update.message.reply_text(
-        f"Saved order: `{tracking_code}` ({order_name})", parse_mode="Markdown"
+        f"Đã lưu đơn hàng: `{tracking_code}` ({order_name})", parse_mode="Markdown"
     )
     return ConversationHandler.END
 
@@ -106,7 +106,7 @@ async def add_cancel(update: Update, context: ContextTypes.DEFAULT_TYPE):
         command = text.strip().split()[0].split("@")[0].lower()
 
         await update.message.reply_text(
-            "Operation cancelled.", reply_markup=ReplyKeyboardRemove()
+            "Thao tác đã bị hủy.", reply_markup=ReplyKeyboardRemove()
         )
 
         if command == "/show":
@@ -119,13 +119,13 @@ async def add_cancel(update: Update, context: ContextTypes.DEFAULT_TYPE):
             return ConversationHandler.END
 
     await update.message.reply_text(
-        "Operation cancelled.", reply_markup=ReplyKeyboardRemove()
+        "Thao tác đã bị hủy.", reply_markup=ReplyKeyboardRemove()
     )
     return ConversationHandler.END
 
 
 async def add_timeout(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text("Operation timed out. Please try /add again.")
+    await update.message.reply_text("Thao tác đã hết giờ. Vui lòng thử lại /add.")
     return ConversationHandler.END
 
 
@@ -138,10 +138,10 @@ async def show_items(update: Update, context: ContextTypes.DEFAULT_TYPE):
         )
 
         if not orders:
-            await update.message.reply_text("You are not tracking any orders.")
+            await update.message.reply_text("Bạn chưa theo dõi đơn hàng nào.")
             return
 
-        response = "Here are your tracked orders:\n\n"
+        response = "Đây là danh sách đơn hàng bạn đang theo dõi:\n\n"
         for i, order in enumerate(orders, 1):
             response += f"{i}. `{order.tracking_code}` - {order.order_name}\n"
 
